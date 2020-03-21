@@ -28,30 +28,40 @@ const view = {
     ]),
 
     title: title => h("div", {}, [
-        h("label", {}, "Title:"),
-        h("input", {onChange: [action.editTitle, eventValue],
-            value: title})
+        h("input",
+        {
+            onChange: [action.editTitle, eventValue],
+            value: title,
+            placeholder: "Title"
+        })
     ]),
 
     freeSpace: freeSpace => h("div", {}, [
-        h("label", {}, "Free space:"),
-        h("input", {
+        h("input",
+        {
             onChange: [action.editFreeSpace, eventValue],
-            value: freeSpace})
+            value: freeSpace,
+            placeholder: "Free space"
+        })
     ]),
 
-    spaces: spaces => spaces.map((item, index) => h("div", {}, [
-        h(
-            "button",
+    spaces: spaces => h("div", {class: "edit-spaces"},
+        spaces.map((item, index) => h("div", {}, [
+            h("label", {}, `${index + 1}`),
+            h("button",
             {
                 disabled: spaces.length === minSpaces,
                 onClick: action.removeSpace(index),
                 tabindex: -1
             },
-            "-"),
-        h("label", {}, `${index + 1}:`),
-        h("input", {onChange: [action.editSpace(index), eventValue], value: item})
-    ])),
+            "\u2715"),
+            h("input",
+            {
+                onChange: [action.editSpace(index), eventValue],
+                value: item
+            })
+        ]
+    ))),
 
     addSpace: () => h("button", {onClick: action.addSpace}, "+"),
 
@@ -76,12 +86,17 @@ const view = {
     cardFreeSpaceRow: (spaces, freeSpace) => h("tr", {}, [
         view.cardSpace(spaces[0]),
         view.cardSpace(spaces[1]),
-        view.cardSpace(freeSpace),
+        view.cardFreeSpace(freeSpace),
         view.cardSpace(spaces[2]),
         view.cardSpace(spaces[3])
     ]),
 
-    cardSpace: space => h("td", {}, space)
+    cardSpace: space => h("td", {}, space),
+
+    cardFreeSpace: space => h("td", {}, [
+        h("p", {}, space),
+        h("p", {}, "(FREE SPACE)")
+    ])
 };
 
 const action = {
